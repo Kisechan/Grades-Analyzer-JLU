@@ -104,17 +104,30 @@ def process_all_grades(input_dir='in', output_dir='out'):
         return
 
     print(f"找到 {len(excel_files)} 个Excel文件，开始分析...\n")
+    print("="*50)
 
     all_results = []
     for file_path in excel_files:
         try:
-            print(f"正在分析文件: {os.path.basename(file_path)}")
+            file_name = os.path.basename(file_path)
+            print(f"\n文件: {file_name}")
+            print("-"*40)
+
             result = analyze_single_file(file_path)
             all_results.append(result)
 
-            # 打印简要结果
-            print(f"  总GPA: {result['total_gpa']:.4f}")
-            print(f"  必修GPA（不含军事体育）: {result['total_required_gpa']:.4f}")
+            # 打印总体结果
+            print(f"总GPA: {result['total_gpa']:.4f}")
+            print(f"必修GPA（不含军事体育）: {result['total_required_gpa']:.4f}")
+            print("-"*20)
+
+            # 打印学年结果
+            print("各学年成绩统计:")
+            for _, row in result['yearly_stats'].iterrows():
+                print(f"{row['学年']} 学年:")
+                print(f"  总GPA: {row['总GPA']:.4f}")
+                print(f"  必修GPA: {row['必修GPA（不含军事体育）']:.4f}")
+                print(f"  平均分: {row['平均分']:.2f}")
 
             # 保存单个文件结果
             student_output_path = os.path.join(output_dir, f"{result['student_id']}_analysis.xlsx")
@@ -125,10 +138,12 @@ def process_all_grades(input_dir='in', output_dir='out'):
                 }).to_excel(writer, sheet_name='总体统计', index=False)
                 result['yearly_stats'].to_excel(writer, sheet_name='分学年统计', index=False)
 
-            print(f"  结果已保存到: {student_output_path}\n")
+            print(f"\n结果已保存到: {student_output_path}")
+            print("="*50)
 
         except Exception as e:
-            print(f"处理文件 {os.path.basename(file_path)} 时出错: {str(e)}\n")
+            print(f"\n处理文件 {os.path.basename(file_path)} 时出错: {str(e)}\n")
+            print("="*50)
 
     # 保存合并结果
     if all_results:
