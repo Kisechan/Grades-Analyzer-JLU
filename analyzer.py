@@ -149,7 +149,3 @@ def process_all_grades(input_dir='in', output_dir='out'):
     if all_results:
         combined_path = save_results_to_excel(all_results, output_dir)
         print(f"\n所有分析完成！合并结果已保存到: {combined_path}")
-
-if __name__ == "__main__":
-    # 处理 in 目录中的所有 Excel 文件
-    process_all_grades()
